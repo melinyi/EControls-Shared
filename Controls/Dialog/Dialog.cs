@@ -1,4 +1,4 @@
-﻿using EControl.Controls.Tools;
+﻿using EControl.Tools;
 using System;
 using System.Threading.Tasks;
 using System.Windows;

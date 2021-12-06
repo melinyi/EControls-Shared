@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 
-namespace EControl.Controls.Tools
+namespace EControl.Tools
 {
     public static class VisualHelper
     {
@@ -37,6 +37,7 @@ namespace EControl.Controls.Tools
 
         public static T GetChild<T>(DependencyObject d) where T : DependencyObject
         {
+            Console.WriteLine(d.GetType());
             if (d == null) return default;
             if (d is T t) return t;
 
@@ -51,14 +52,16 @@ namespace EControl.Controls.Tools
             return default;
         }
 
-        public static T GetParent<T>(DependencyObject d) where T : DependencyObject =>
-            d switch
-            {
-                null => default,
-                T t => t,
-                System.Windows.Window _ => null,
-                _ => GetParent<T>(VisualTreeHelper.GetParent(d))
-            };
+        public static T GetParent<T>(DependencyObject d) where T : DependencyObject => d switch
+        {
+            null => default,
+            T t => t,
+            System.Windows.Window _ => null,
+            _ => GetParent<T>(VisualTreeHelper.GetParent(d))
+        };
+
+        public static DependencyObject GetTopParent(DependencyObject d) =>
+       VisualTreeHelper.GetParent(d) == null ? d : GetTopParent(VisualTreeHelper.GetParent(d));
 
         public static IntPtr GetHandle(this Visual visual) => (PresentationSource.FromVisual(visual) as HwndSource)?.Handle ?? IntPtr.Zero;
 
