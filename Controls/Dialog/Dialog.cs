@@ -30,7 +30,7 @@ namespace EControl.Controls
             };
 
             //获取指定元素的装饰层
-            AdornerDecorator decorator = VisualHelper.GetChild<AdornerDecorator>((FrameworkElement)DialogParent);
+            AdornerDecorator decorator = Tools.Helper.VisualHelper.GetChild<AdornerDecorator>((FrameworkElement)DialogParent);
 
             if (decorator != null)
             {
@@ -46,7 +46,7 @@ namespace EControl.Controls
                         //遮罩背景 Border
                         Child = new Border()
                         {
-                            Background= new SolidColorBrush(Color.FromArgb(60, 0, 0, 0)),
+                            Background = new SolidColorBrush(Color.FromArgb(60, 0, 0, 0)),
                             Child = dialog//设置内容
                         }
                     };
@@ -144,17 +144,21 @@ namespace EControl.Controls
 
         public void Close()
         {
-            if (_ParentElement != null)
+            //防止异步线程调用关闭导致线程访问异常抛出
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                Close(_ParentElement);
-            }
+                if (_ParentElement != null)
+                {
+                    Close(_ParentElement);
+                }
+            });
         }
 
         private void Close(DependencyObject element)
         {
             if (element != null && _DialogContainer != null)
             {
-                AdornerDecorator decorator = VisualHelper.GetChild<AdornerDecorator>(element);
+                AdornerDecorator decorator = Tools.Helper.VisualHelper.GetChild<AdornerDecorator>(element);
                 if (decorator != null)
                 {
                     if (decorator.Child != null)

@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 
-namespace EControl.Tools
+namespace EControl.Tools.Helper
 {
     public static class VisualHelper
     {
@@ -37,7 +37,6 @@ namespace EControl.Tools
 
         public static T GetChild<T>(DependencyObject d) where T : DependencyObject
         {
-            Console.WriteLine(d.GetType());
             if (d == null) return default;
             if (d is T t) return t;
 
@@ -48,7 +47,6 @@ namespace EControl.Tools
                 var result = GetChild<T>(child);
                 if (result != null) return result;
             }
-
             return default;
         }
 
@@ -78,6 +76,32 @@ namespace EControl.Tools
             return HitTestFilterBehavior.ContinueSkipSelfAndChildren;
         }
 
+        /// <summary>
+        /// 输出所有父级 <see cref="Console.WriteLine"/>
+        /// </summary>
+        public static void PingParent(DependencyObject d)
+        {
+            var parent = System.Windows.Media.VisualTreeHelper.GetParent(d);
 
+            while (parent != null)
+            {
+                Console.WriteLine(parent);
+                parent = System.Windows.Media.VisualTreeHelper.GetParent(parent);
+            }
+        }
+
+
+        /// <summary>
+        /// 输出所有子级 <see cref="Console.WriteLine"/>
+        /// </summary>
+        public static void PingTopChild(DependencyObject d)
+        {
+            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(d); i++)
+            {
+                var child = VisualTreeHelper.GetChild(d, i);
+
+                Console.WriteLine(child);
+            }
+        }
     }
 }

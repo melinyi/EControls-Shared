@@ -9,13 +9,17 @@
     <Import_RootNamespace>EControl</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Button\ButtonIconText.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Dialog\Dialog.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Dialog\AdornerContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Dialog\IDialogGetResultViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\RadioButton\RadiuButtonIconText.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\TabFrame\ITabPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\TabFrame\TabFrameControl.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\VirtualizingWrapPanel\IVirtualizingContinueWith.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\DragDirection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tools\Helper\AnimationHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tools\Helper\DragMoveSortHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tools\Helper\VisualHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\VirtualizingWrapPanel\VirtualizingItemsControl.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\VirtualizingWrapPanel\VirtualizingPanelBase.cs" />
@@ -26,7 +30,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\VirtualizingWrapPanel\VirtualizingWrapPanelWithItemExpansion.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Data\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Tools\Helper\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Tools\Extension\" />
   </ItemGroup>
 </Project>

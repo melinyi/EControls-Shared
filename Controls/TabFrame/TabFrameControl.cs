@@ -192,6 +192,8 @@ namespace EControl.Controls.TabFrame
                 TargetType = typeof(TabItem),
             };
 
+            Padding = new System.Windows.Thickness(0);
+
             tabItemStyle.Setters.Add(new Setter(VisibilityProperty, Visibility.Collapsed));
             ItemContainerStyle = tabItemStyle;
         }

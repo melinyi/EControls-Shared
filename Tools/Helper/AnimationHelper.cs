@@ -6,7 +6,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using HandyControl.Tools.Extension;
 
-namespace EControl.Tools
+namespace EControl.Tools.Helper
 {
     /// <summary>
     ///     包含一些常用的动画辅助方法

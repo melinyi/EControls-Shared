@@ -20,6 +20,7 @@ namespace EControl.Controls
         public static readonly DependencyProperty MouseWheelDeltaProperty = DependencyProperty.Register(nameof(MouseWheelDelta), typeof(double), typeof(VirtualizingPanelBase), new FrameworkPropertyMetadata(48.0));
         public static readonly DependencyProperty ScrollLineDeltaItemProperty = DependencyProperty.Register(nameof(ScrollLineDeltaItem), typeof(int), typeof(VirtualizingPanelBase), new FrameworkPropertyMetadata(1));
         public static readonly DependencyProperty MouseWheelDeltaItemProperty = DependencyProperty.Register(nameof(MouseWheelDeltaItem), typeof(int), typeof(VirtualizingPanelBase), new FrameworkPropertyMetadata(3));
+        public static readonly DependencyProperty IsVirtualizingItemContinueWithProperty = DependencyProperty.Register(nameof(IsVirtualizingItemContinueWith), typeof(bool), typeof(VirtualizingPanelBase), new FrameworkPropertyMetadata(true));
 
         public System.Windows.Controls.ScrollViewer? ScrollOwner { get; set; }
 
@@ -47,6 +48,10 @@ namespace EControl.Controls
         /// 用于基于项目的滚动的鼠标滚轮增量。默认值为3项。
         /// </summary> 
         public int MouseWheelDeltaItem { get => (int)GetValue(MouseWheelDeltaItemProperty); set => SetValue(MouseWheelDeltaItemProperty, value); }
+        /// <summary>
+        /// 是否在虚拟化子项目时运行接口参数
+        /// </summary>
+        public bool IsVirtualizingItemContinueWith { get => (bool)GetValue(IsVirtualizingItemContinueWithProperty); set => SetValue(IsVirtualizingItemContinueWithProperty, value); }
 
         protected ScrollUnit ScrollUnit => GetScrollUnit(ItemsControl);
 
@@ -327,7 +332,7 @@ namespace EControl.Controls
                     {
 #nullable disable
                         //添加之前操作一些动作
-                        if (Items?[childIndex] is IVirtualizingContinueWith continueWith)
+                        if (IsVirtualizingItemContinueWith && Items?[childIndex] is IVirtualizingContinueWith continueWith)
                         {
                             continueWith.AddContinueWith?.Invoke();
                         }
@@ -373,7 +378,7 @@ namespace EControl.Controls
                 {
 #nullable disable
                     //移除之前操作一些动作
-                    if (Items?[childIndex] is IVirtualizingContinueWith continueWith)
+                    if (IsVirtualizingItemContinueWith && Items?[childIndex] is IVirtualizingContinueWith continueWith)
                     {
                         continueWith.RemoveContinueWith?.Invoke();
                     }
@@ -412,7 +417,7 @@ namespace EControl.Controls
                 offset = Extent.Height - Viewport.Height;
             }
             Offset = new Point(Offset.X, offset);
-            ScrollOwner?.InvalidateScrollInfo();                   
+            ScrollOwner?.InvalidateScrollInfo();
             InvalidateMeasure();
         }
 
