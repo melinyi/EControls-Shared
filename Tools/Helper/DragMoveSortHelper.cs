@@ -27,7 +27,7 @@ namespace EControl.Tools.Helper
             return e.Data.GetData(e.Data.GetFormats()[0]);
         }
 
-        public static void ChangeItemIndex<T>(Collection<T> itemSource, object sender, DragEventArgs e, DragDirection dragDirection)
+        public static void ChangeItemIndex<T>(ObservableCollection<T> itemSource, object sender, DragEventArgs e, DragDirection dragDirection)
         {
             var from = GetDragData(e);
             var to = GetDataContext(sender);
@@ -46,11 +46,11 @@ namespace EControl.Tools.Helper
                     break;
             }
 
-            ChangeItemIndex(eVideo.ViewModel.ViewModelLocator.Instance.PageMusicMainPanel.SongListCollection, from, to, pre);
+            ChangeItemIndex(itemSource, from, to, pre);
 
         }
 
-        private static void ChangeItemIndex<T>(Collection<T> itemSource, object fromObj, object toObj, int pre)
+        private static void ChangeItemIndex<T>(ObservableCollection<T> itemSource, object fromObj, object toObj, int pre)
         {
             //其中一方为空
             if (fromObj == null || toObj == null) return;
