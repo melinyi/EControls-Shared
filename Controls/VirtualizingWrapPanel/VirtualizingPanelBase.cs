@@ -81,7 +81,6 @@ namespace EControl.Controls
         /// </summary>
         protected VirtualizationCacheLengthUnit CacheLengthUnit { get; private set; }
 
-
         /// <summary>
         /// ItemsControl（例如ListView）。
         /// </summary>
