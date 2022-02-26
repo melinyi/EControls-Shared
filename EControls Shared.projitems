@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Dialog\Dialog.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Dialog\AdornerContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Dialog\IDialogGetResultViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ItemsControlDragContainer\ItemsControlDragContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\RadioButton\RadiuButtonIconText.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\TabFrame\ITabPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\TabFrame\TabFrameControl.cs" />
@@ -30,6 +31,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\VirtualizingWrapPanel\VirtualizingWrapPanelWithItemExpansion.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Controls\ItemsControlDragContainer\" />
     <Folder Include="$(MSBuildThisFileDirectory)Tools\Extension\" />
   </ItemGroup>
 </Project>

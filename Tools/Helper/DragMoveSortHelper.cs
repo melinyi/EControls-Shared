@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,10 +25,10 @@ namespace EControl.Tools.Helper
 
         public static object GetDragData(DragEventArgs e)
         {
-            return e.Data.GetData(e.Data.GetFormats()[0]);
+            return e.Data.GetData(e.Data.GetFormats()?.FirstOrDefault());
         }
 
-        public static void ChangeItemIndex<T>(ObservableCollection<T> itemSource, object sender, DragEventArgs e, DragDirection dragDirection)
+        public static void ChangeItemIndex(IList itemSource, object sender, DragEventArgs e, DragDirection dragDirection)
         {
             var from = GetDragData(e);
             var to = GetDataContext(sender);
@@ -47,10 +48,9 @@ namespace EControl.Tools.Helper
             }
 
             ChangeItemIndex(itemSource, from, to, pre);
-
         }
 
-        private static void ChangeItemIndex<T>(ObservableCollection<T> itemSource, object fromObj, object toObj, int pre)
+        private static void ChangeItemIndex(IList itemSource, object fromObj, object toObj, int pre)
         {
             //其中一方为空
             if (fromObj == null || toObj == null) return;
@@ -61,8 +61,8 @@ namespace EControl.Tools.Helper
             //两者相同
             if (fromObj.Equals(toObj)) return;
 
-            var fromItem = (T)fromObj;
-            var toItem = (T)toObj;
+            var fromItem = fromObj;
+            var toItem = toObj;
             itemSource.Remove(fromItem);//移除需要变动的对象
             int indexTo = itemSource.IndexOf(toItem);//找到需要插入的位置索引
             if (indexTo == 0 && pre == 0)
@@ -78,5 +78,6 @@ namespace EControl.Tools.Helper
                 itemSource.Insert(indexTo + pre, fromItem);
             }
         }
+
     }
 }
