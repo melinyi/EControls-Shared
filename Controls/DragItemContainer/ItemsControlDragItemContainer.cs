@@ -9,9 +9,9 @@ using System.Windows.Media;
 
 namespace EControl.Controls
 {
-    public class ItemsControlDragContainer : Border
+    public class ItemsControlDragItemContainer : Border
     {
-        public ItemsControlDragContainer()
+        public ItemsControlDragItemContainer()
         {
             this.AllowDrop = true;
             this.Padding = new Thickness(0, 0, 0, 0);
@@ -29,7 +29,7 @@ namespace EControl.Controls
 
         // Using a DependencyProperty as the backing store for  DragDirection.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty DragDirectionProperty =
-            DependencyProperty.Register("DragDirection", typeof(EControl.Data.DragDirection), typeof(ItemsControlDragContainer), new PropertyMetadata(EControl.Data.DragDirection.TopAndBottom));
+            DependencyProperty.Register("DragDirection", typeof(EControl.Data.DragDirection), typeof(ItemsControlDragItemContainer), new PropertyMetadata(EControl.Data.DragDirection.TopAndBottom));
 
         private Point DragFirstPoint;
         protected override void OnPreviewMouseDown(MouseButtonEventArgs e) => DragFirstPoint = e.GetPosition(this);
