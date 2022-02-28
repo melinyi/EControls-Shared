@@ -16,7 +16,7 @@ namespace EControl.Controls
             this.AllowDrop = true;
             this.Padding = new Thickness(0, 0, 0, 0);
             this.Margin = new Thickness(0, 0, 0, 0);
-            this.BorderBrush = Brushes.Orange;
+            //this.BorderBrush = Brushes.Orange;
         }
 
         public ItemsControl GetItemsControl => EControl.Tools.Helper.VisualHelper.GetParent<ItemsControl>(this);
