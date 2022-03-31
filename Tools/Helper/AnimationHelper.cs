@@ -4,7 +4,6 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using HandyControl.Tools.Extension;
 
 namespace EControl.Tools.Helper
 {

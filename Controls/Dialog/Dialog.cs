@@ -3,6 +3,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -136,7 +137,10 @@ namespace EControl.Controls
         /// </summary>
         private FrameworkElement _ParentElement { get; set; }
 
+
+#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
         public Dialog()
+#pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
         {
             //绑定默认的关闭命令
             CommandBindings.Add(new CommandBinding(ApplicationCommands.Close, (s, e) => Close()));

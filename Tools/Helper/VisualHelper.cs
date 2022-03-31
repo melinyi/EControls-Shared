@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Interop;
@@ -48,6 +49,22 @@ namespace EControl.Tools.Helper
                 if (result != null) return result;
             }
             return default;
+        }
+
+        public static List<T> GetChilds<T>(DependencyObject d) where T : DependencyObject
+        {
+            if (d == null) return default;
+
+            List<T> results = new List<T>();
+
+            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(d); i++)
+            {
+                var child = VisualTreeHelper.GetChild(d, i);
+
+                var result = GetChild<T>(child);
+                if (result != null) results.Add(result);
+            }
+            return results.Count > 0 ? results : default;
         }
 
         public static T GetParent<T>(DependencyObject d) where T : DependencyObject => d switch
