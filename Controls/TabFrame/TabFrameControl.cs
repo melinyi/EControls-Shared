@@ -198,18 +198,11 @@ namespace EControl.Controls.TabFrame
             ItemContainerStyle = tabItemStyle;
         }
 
-        public void RemoveHistory(string pageName, params object[] param)
+        public void ClearHistory()
         {
-            foreach (var item in param)
-            {
-                try
-                {
-                    var his = HistoryList.First(i => i.Key == pageName && i.Value == item);
-                    HistoryList.Remove(his);
-                }
-                catch (Exception)
-                { }
-            }
+            GoBackControl.IsEnabled = false;
+            GoForwardControl.IsEnabled = false;
+            HistoryList.Clear();
         }
     }
 
