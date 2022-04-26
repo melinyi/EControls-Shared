@@ -20,8 +20,7 @@ namespace EControl.Controls
         public static readonly DependencyProperty MouseWheelDeltaProperty = DependencyProperty.Register(nameof(MouseWheelDelta), typeof(double), typeof(VirtualizingPanelBase), new FrameworkPropertyMetadata(48.0));
         public static readonly DependencyProperty ScrollLineDeltaItemProperty = DependencyProperty.Register(nameof(ScrollLineDeltaItem), typeof(int), typeof(VirtualizingPanelBase), new FrameworkPropertyMetadata(1));
         public static readonly DependencyProperty MouseWheelDeltaItemProperty = DependencyProperty.Register(nameof(MouseWheelDeltaItem), typeof(int), typeof(VirtualizingPanelBase), new FrameworkPropertyMetadata(3));
-        public static readonly DependencyProperty IsVirtualizingItemContinueWithProperty = DependencyProperty.Register(nameof(IsVirtualizingItemContinueWith), typeof(bool), typeof(VirtualizingPanelBase), new FrameworkPropertyMetadata(true));
-
+    
         public System.Windows.Controls.ScrollViewer? ScrollOwner { get; set; }
 
         public bool CanVerticallyScroll { get; set; }
@@ -48,11 +47,7 @@ namespace EControl.Controls
         /// 用于基于项目的滚动的鼠标滚轮增量。默认值为3项。
         /// </summary> 
         public int MouseWheelDeltaItem { get => (int)GetValue(MouseWheelDeltaItemProperty); set => SetValue(MouseWheelDeltaItemProperty, value); }
-        /// <summary>
-        /// 是否在虚拟化子项目时运行接口参数
-        /// </summary>
-        public bool IsVirtualizingItemContinueWith { get => (bool)GetValue(IsVirtualizingItemContinueWithProperty); set => SetValue(IsVirtualizingItemContinueWithProperty, value); }
-
+    
         protected ScrollUnit ScrollUnit => GetScrollUnit(ItemsControl);
 
         /// <summary>
@@ -313,6 +308,8 @@ namespace EControl.Controls
             return desiredSize;
         }
 
+        private int count = 0;
+
         /// <summary>
         /// 恢复可见项和缓存项。Realizes visible and cached items.
         /// </summary>
@@ -329,11 +326,13 @@ namespace EControl.Controls
                     UIElement child = (UIElement)ItemContainerGenerator.GenerateNext(out bool isNewlyRealized);
                     if (isNewlyRealized || /*recycled*/!InternalChildren.Contains(child))
                     {
-#nullable disable
-                        //添加之前操作一些动作
-                        if (IsVirtualizingItemContinueWith && Items?[childIndex] is IVirtualizingContinueWith continueWith)
+
+                        count++;
+                        if (count>=1000)
                         {
-                            continueWith.AddContinueWith?.Invoke();
+                            Console.WriteLine("GC~"+DateTime.Now);
+                            System.GC.Collect();
+                            count= 0;
                         }
 
                         if (childIndex >= InternalChildren.Count)
@@ -375,13 +374,6 @@ namespace EControl.Controls
 
                 if (itemIndex != -1 && !ItemRange.Contains(itemIndex))
                 {
-#nullable disable
-                    //移除之前操作一些动作
-                    if (IsVirtualizingItemContinueWith && Items?[childIndex] is IVirtualizingContinueWith continueWith)
-                    {
-                        continueWith.RemoveContinueWith?.Invoke();
-                    }
-
                     if (VirtualizationMode == VirtualizationMode.Recycling)
                     {
                         ItemContainerGenerator.Recycle(generatorPosition, 1);

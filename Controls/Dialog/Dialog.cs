@@ -28,8 +28,10 @@ namespace EControl.Controls
             {
                 _ParentElement = (FrameworkElement)DialogParent,
                 Content = DialogContent
+             
             };
 
+           
             //获取指定元素的装饰层
             AdornerDecorator decorator = Tools.Helper.VisualHelper.GetChild<AdornerDecorator>((FrameworkElement)DialogParent);
 
@@ -63,6 +65,17 @@ namespace EControl.Controls
             {
                 throw new InvalidOperationException($"{DialogParent.GetType()} 这个元素没有 {typeof(AdornerDecorator)}");
             }
+
+            //获取指定元素的窗口，禁用关闭
+            //Window window = Tools.Helper.VisualHelper.GetChild<Window>((FrameworkElement)DialogParent);
+            //if (window!=null)
+            //{
+
+            //}
+
+
+
+
             return dialog;
         }
 

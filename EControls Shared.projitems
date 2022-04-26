@@ -15,9 +15,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Dialog\IDialogGetResultViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\DragItemContainer\ItemsControlDragItemContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\RadioButton\RadiuButtonIconText.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ScrollViewer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\TabFrame\ITabPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\TabFrame\TabFrameControl.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\VirtualizingWrapPanel\IVirtualizingContinueWith.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\DragDirection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tools\Helper\AnimationHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tools\Helper\DragMoveSortHelper.cs" />
