@@ -67,12 +67,13 @@ namespace EControl.Controls.TabFrame
 
         private void SetPage(ITabPage page, object param)
         {
+            SelectedItem = page;
+         
+           UpdateUI(new KeyValuePair<string, object>(page.Name, param));
+           
             //执行页面参数
             page.NavigateContinueWithInvoke?.Invoke(param);
-
-            SelectedItem = page;
-
-            UpdateUI(new KeyValuePair<string, object>(page.Name, param));
+         
         }
 
         #endregion
@@ -86,20 +87,18 @@ namespace EControl.Controls.TabFrame
         private KeyValuePair<string, object> CurrentPageCode;
         private int HistoryIndex { get; set; }
 
-        private bool _CanGoBack;
+        public bool CanGoBack => HistoryIndex != 0 && HistoryList.Count > 1 ? true : false;
 
-        public bool CanGoBack => _CanGoBack;
-
-        private bool _CanGoForward;
-
-        public bool CanGoForward => _CanGoForward;
+        public bool CanGoForward => HistoryIndex < HistoryList.Count - 1 ? true : false;
 
 
         private void PageJump(int index)
         {
+            if (index < 0) return;
             CurrentPageCode = HistoryList.ElementAt(index);
-
+        
             var page = Items.FindPageFirstOrNull(CurrentPageCode.Key);
+         
             if (page is ITabPage tabPage)
             {
                 SetPage(tabPage, CurrentPageCode.Value);
@@ -124,11 +123,8 @@ namespace EControl.Controls.TabFrame
         private void UpdateUI(KeyValuePair<string, object> HistoryItem)
         {
             CurrentPageCode = HistoryItem;
-            _CanGoBack = HistoryIndex != 0 && HistoryList.Count > 1 ? true : false;
-            _CanGoForward = HistoryIndex < HistoryList.Count - 1 ? true : false;
-
-            SetBackOrForwardControl(GoBackControl, _CanGoBack);
-            SetBackOrForwardControl(GoForwardControl, _CanGoForward);
+            SetBackOrForwardControl(GoBackControl,CanGoBack);
+            SetBackOrForwardControl(GoForwardControl,CanGoForward);
         }
 
         private void SetBackOrForwardControl(Control control, bool value)
