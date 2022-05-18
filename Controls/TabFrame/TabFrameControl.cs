@@ -17,63 +17,95 @@ namespace EControl.Controls.TabFrame
         /// 获取当前注册的页面合集
         /// </summary>
         public ItemCollection PageCollection => Items;
-        private List<string> PageNameList { get; set; } = new List<string>();
 
-        public void RegisterPage(ITabPage page)
+        public void RegisterPage<T>() where T : ITabPage, new()
         {
-            if (PageCollection.Contains(page) || PageNameList.Contains(page.Name))
+            if (PageCollection.FindPageFirstOrNull<T>() != null)
             {
-                throw new InvalidOperationException($"页面类或名称 类名称：{page.GetType().FullName} 页面名称：{page.Name} 已注册过!");
+                throw new InvalidOperationException($"页面类或名称 类名称：{typeof(T).FullName} 已注册过!");
             }
 
-            PageNameList.Add(page.Name);
-            Items.Add(page);
-        }
-
-        public void Navigate(ITabPage page, object param)
-        {
-            if (!PageCollection.Contains(page))
+            if (System.Activator.CreateInstance(typeof(T)) is ITabPage Page)
             {
-                throw new InvalidOperationException($"页面 {page.Name} 未注册!");
-            }
-            if (CurrentPageCode.Key == page.Name && param == null) return;
-            //if (CurrentPageCode.Key.Equals(type) && param != null && CurrentPageCode.Value.Equals(param)) return;
-
-            //如果先前一页非最后一页，则删除当前可前进的条目
-            if (HistoryIndex != HistoryList.Count - 1)
-            {
-                HistoryList = HistoryList.Take(HistoryIndex + 1).ToList();
-            }
-
-            HistoryList.Add(new KeyValuePair<string, object>(page.Name, param));
-            HistoryIndex = HistoryList.Count - 1;
-
-            SetPage(page, param);
-        }
-
-        public void Navigate(string pageName, object param)
-        {
-            var page = Items.FindPageFirstOrNull(pageName);
-
-            if (page is ITabPage tabPage)
-            {
-                Navigate(tabPage, param);
+                Items.Add(Page);
             }
             else
             {
-                throw new InvalidOperationException($"页面 {pageName} 未注册!");
+                throw new InvalidOperationException($"页面 {typeof(T).FullName} 未实现 ITabPage 接口!");
+            }            
+        }
+
+        /// <summary>
+        /// 获取指定页
+        /// </summary>
+        /// <typeparam name="T">页</typeparam>
+        /// <returns>返回指定页面</returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public T GetPage<T>() where T : ITabPage, new()
+        {
+            if (Items.FindPageFirstOrNull<T>() is T res)
+            {
+                return res;
+            }
+            throw new InvalidOperationException($"页面类或名称 类名称：{typeof(T).FullName} 未注册过!");
+        }
+
+        /// <summary>
+        /// 获取是否当前页面为指定页
+        /// </summary>
+        public bool IsCurrentPage<T>() => this.SelectedItem is T;
+
+        public void Navigate<T>(object param)
+        {
+            var pageItem = Items.FindPageFirstOrNull<T>();
+
+            if (pageItem == null)
+            {
+                throw new InvalidOperationException($"页面 {typeof(T).FullName} 未注册!");
+            }
+
+            if (pageItem is ITabPage page)
+            {
+                if (CurrentPageCode.Key == page.Name && param == null) return;
+                //if (CurrentPageCode.Key.Equals(type) && param != null && CurrentPageCode.Value.Equals(param)) return;
+
+                //如果先前一页非最后一页，则删除当前可前进的条目
+                if (HistoryIndex != HistoryList.Count - 1)
+                {
+                    HistoryList = HistoryList.Take(HistoryIndex + 1).ToList();
+                }
+
+                HistoryList.Add(new KeyValuePair<string, object>(page.Name, param));
+                HistoryIndex = HistoryList.Count - 1;
+
+                SetPage(page, param);
+            }
+            else
+            {
+                throw new InvalidOperationException($"页面 {typeof(T).FullName} 未实现 ITabPage 接口!");
             }
         }
+
+        //public void Navigate(string pageName, object param)
+        //{
+        //    var page = Items.FindPageFirstOrNull(pageName);
+
+        //    if (page is ITabPage tabPage)
+        //    {
+        //        Navigate(tabPage, param);
+        //    }
+        //    else
+        //    {
+        //        throw new InvalidOperationException($"页面 {pageName} 未注册!");
+        //    }
+        //}
 
         private void SetPage(ITabPage page, object param)
         {
             SelectedItem = page;
-         
-           UpdateUI(new KeyValuePair<string, object>(page.Name, param));
-           
+            UpdateUI(new KeyValuePair<string, object>(page.Name, param));
             //执行页面参数
             page.NavigateContinueWithInvoke?.Invoke(param);
-         
         }
 
         #endregion
@@ -94,11 +126,10 @@ namespace EControl.Controls.TabFrame
 
         private void PageJump(int index)
         {
-            if (index < 0) return;
             CurrentPageCode = HistoryList.ElementAt(index);
-        
+
             var page = Items.FindPageFirstOrNull(CurrentPageCode.Key);
-         
+
             if (page is ITabPage tabPage)
             {
                 SetPage(tabPage, CurrentPageCode.Value);
@@ -123,8 +154,8 @@ namespace EControl.Controls.TabFrame
         private void UpdateUI(KeyValuePair<string, object> HistoryItem)
         {
             CurrentPageCode = HistoryItem;
-            SetBackOrForwardControl(GoBackControl,CanGoBack);
-            SetBackOrForwardControl(GoForwardControl,CanGoForward);
+            SetBackOrForwardControl(GoBackControl, CanGoBack);
+            SetBackOrForwardControl(GoForwardControl, CanGoForward);
         }
 
         private void SetBackOrForwardControl(Control control, bool value)
@@ -207,18 +238,41 @@ namespace EControl.Controls.TabFrame
     /// </summary>
     public static class TabFrameControlExtension
     {
+        public static object FindPageFirstOrNull<T>(this ItemCollection value)
+        {
+            //eVideoHelper.eVideoHelper.ShowMainWindowGrowlMessage(nameofToken, Data.Enum.Base.MessageboxImageType.Waring);
+            if (value?.Count > 0)
+            {
+                foreach (var item in value)
+                {
+                    if (item.GetType() == typeof(T))
+                    {
+                        return item;
+                    }
+                    //eVideoHelper.eVideoHelper.ShowMainWindowGrowlMessage(item.GetType().Name, Data.Enum.Base.MessageboxImageType.Waring);
+
+                }
+            }
+
+            return null;
+        }
+
         public static object FindPageFirstOrNull(this ItemCollection value, string pageName)
         {
             //eVideoHelper.eVideoHelper.ShowMainWindowGrowlMessage(nameofToken, Data.Enum.Base.MessageboxImageType.Waring);
-            foreach (var item in value)
+            if (value?.Count > 0)
             {
-                if (item is ITabPage page)
+                foreach (var item in value)
                 {
-                    if (page.Name == pageName) return item;
-                }
-                //eVideoHelper.eVideoHelper.ShowMainWindowGrowlMessage(item.GetType().Name, Data.Enum.Base.MessageboxImageType.Waring);
+                    if (item is ITabPage page && page.Name == pageName)
+                    {
+                        return item;
+                    }
+                    //eVideoHelper.eVideoHelper.ShowMainWindowGrowlMessage(item.GetType().Name, Data.Enum.Base.MessageboxImageType.Waring);
 
+                }
             }
+
             return null;
         }
     }
