@@ -44,6 +44,10 @@ namespace EControl.Controls
             get => (bool)GetValue(CanMouseWheelProperty);
             set => SetValue(CanMouseWheelProperty, value);
         }
+
+        /// <summary>
+        /// 鼠标滚动补偿
+        /// </summary>
         public double MouseWheelDelta
         {
             get { return (double)GetValue(MouseWheelDeltaProperty); }
@@ -237,4 +241,5 @@ namespace EControl.Controls
             set => SetValue(CurrentHorizontalOffsetProperty, value);
         }
     }
+
 }
